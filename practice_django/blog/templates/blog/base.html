@@ -1,0 +1,24 @@
+{# базовые шаблон для блога #}
+
+{% extends 'templates_projects/base.html' %}
+
+
+
+{% block content %}
+
+
+<section class="article-clean">
+  <div class="container"><!--контейнер-->
+
+    {% block content_blog %}{% endblock %}
+
+  </div><!-- End контейнер-->
+</section>
+
+
+
+
+
+
+
+  {%endblock%}

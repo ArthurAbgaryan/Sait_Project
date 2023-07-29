@@ -1,0 +1,54 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+{% if post %}
+{{post.title}}
+{% else %}
+Все посты пользователя {{post.auth}}
+{% endif %}
+{% endblock %}
+
+{% block content_blog %}
+
+<div class="row">
+    <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+
+        {% if blog_post_user_list %}
+
+        {% for post in blog_post_user_list %}
+
+        <div class="intro">
+            <h1 class="text-center" data-bss-hover-animate="pulse">&nbsp;
+
+                {{post.title}}
+
+
+            </h1>
+            <p class="text-center">
+
+                <span class="by">by</span> <a href="#">{{post.author}}</a>&nbsp;&nbsp;<span class="date">{{post.date_create|date:"o M d"}} </span><br>
+            {{post.content|safe}}
+            </p>
+        </div>
+        {% endfor %}
+
+
+        {% else %}
+        <p class="text-center" data-bss-hover-animate="pulse"> У этого пользователя нет постов</p>
+
+        {% endif %}
+
+
+
+        <div class="text">
+            <p>
+
+
+
+            </p>
+            <figure class="figure d-block"></figure>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
