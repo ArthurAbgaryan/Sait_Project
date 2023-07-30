@@ -1,9 +1,9 @@
 import pandas as pd
 
-fr = pd.DataFrame(
-    {"age": 30,
+kas22r = pd.DataFrame(
+    {"age": [30,20,23],
      "name": ['Jon','Katrin','Battler'],
      "hobby": ['avto','spining','basketbool']}
 )
 
-print(fr)
+print(kas22r)
