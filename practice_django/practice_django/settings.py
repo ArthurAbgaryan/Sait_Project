@@ -87,6 +87,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     'blog.apps.BlogConfig',             #такой путь указ-ся когда приложения будут связаны между собой
+    'pandas_app',
     'crispy_forms',
     'ckeditor',
     'django_extensions',
