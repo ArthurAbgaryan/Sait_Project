@@ -88,6 +88,7 @@ INSTALLED_APPS = [
 
     'blog.apps.BlogConfig',             #такой путь указ-ся когда приложения будут связаны между собой
     'pandas_app',
+    'forms_app',
     'crispy_forms',
     'ckeditor',
     'django_extensions',
@@ -205,6 +206,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -275,12 +277,28 @@ CHANNEL_LAYERS = {
 # End django-channels
 GOOGLE_RECAPTCHA_SECRET_KEY = os.getenv("GOOGLE_RECAPTCHA_SECRET_KEY")
 # email
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_EMAIL_USER')
+
+
+'''этот фрагмент кода должен быть в файле .env что бы не загружать settings.py'''
+GOOGLE_RECAPTCHA_SECRET_KEY='6LdVwogdAAAAA47894GKxqjEnHd7u5z-_tq91n'
+DEBUG=True
+EMAIL_PORT=587
+EMAIL_USER='abgaryanarthurelina@gmail.com'
+EMAIL_PASS='papa9464'
+DEFAULT_FROM_EMAIL = 'abgaryanarthurelina@gmail.com'
 
 # End Email
 
