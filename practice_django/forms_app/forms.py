@@ -2,7 +2,9 @@
 
 from django import forms
 import datetime
-
+'''
+По умолчанию по всех полях required = True, что означает что поле обязательно к заполнению
+'''
 class ContactForm(forms.Form):
     date_created = forms.DateField (initial = datetime.date.today, required=True, help_text = "Заполнить не позднее 1-ой недели")#init-как
     #мы расматривали в предыдущих уроках автоматический заполняет поле, inittial -это аргумент поля формы
@@ -15,6 +17,6 @@ class ContactForm(forms.Form):
 
     def clean_date_creation(self):
         data = self.cleaned_data['date_created']
-        if data < datetime.date.today():
+        if data != datetime.date.today():
             raise forms.ValidationError(('Дата отправки не верна'))
         return data

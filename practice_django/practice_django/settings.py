@@ -88,6 +88,7 @@ INSTALLED_APPS = [
 
     'blog.apps.BlogConfig',             #такой путь указ-ся когда приложения будут связаны между собой
     'pandas_app',
+    'model_form',
     'forms_app',
     'crispy_forms',
     'ckeditor',
@@ -124,7 +125,10 @@ ROOT_URLCONF = 'practice_django.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],#папка где джанго будет искать шаблоны
+        'DIRS': [
+            os.path.join(BASE_DIR,'templates')#папка где джанго будет искать шаблоны
+
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [    #то что будет работать постоянно вне зависимости от шаблона
@@ -310,5 +314,5 @@ MESSAGE_TAGS = {
         messages.ERROR: 'alert-danger',
 }
 
-# в производстве убрать.
+# в производстве убрать, для корректной работы jypiter
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"

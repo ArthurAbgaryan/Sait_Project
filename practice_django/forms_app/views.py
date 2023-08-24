@@ -16,7 +16,7 @@ def contact_send(request):
     else:
         form = ContactForm(request.POST,request.FILES)
         if form.is_valid():
-            #date_created = form.cleaned_data['date_created']
+            date_created = form.cleaned_data['date_created']
             '''
             if date_created < datetime.date.today():
                 form = ContactForm()
@@ -34,6 +34,12 @@ def contact_send(request):
             if cc_myself:
                 recipients.append(subject)
                 recipients.append(message)
+            #этот блок для случая если неверная дата, то есть возврашает форму с предупреждением и заполненым полем
+            else:
+                date_created_today = datetime.date.today()
+                form = ContactForm(initial = {
+                    'date_created':date_created_today
+                })
             try:
                 send_mail(subject, message, sender, recipients)
             except BadHeaderError:

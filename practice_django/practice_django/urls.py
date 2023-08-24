@@ -26,6 +26,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('',include('blog.urls')),
     path('form/', include('forms_app.urls')),
+    path('model_form/',include('model_form.urls')),
     #path('register/', user_views.register, name='register'),
     #path('profile/', user_views.profile, name='profile'),
     #path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
