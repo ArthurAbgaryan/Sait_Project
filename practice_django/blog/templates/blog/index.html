@@ -1,0 +1,46 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block title%} index{% endblock %}
+{% block content %}
+
+<section class="d-flex align-items-center" id="index">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 col-ld-6 col-lx-6 col-xxl-6" id="column-index-text">
+                    <h3 data-aos="fade-up-right">На Django 4 с нуля, напишем такой сайт социальной сети. Круто?</h3>
+                    <p>С нуля шаг за шагом. У вас появится опыт работы с документацией. Вы сможете встраивать любой код в свой сайт. Сформируем твёрдое понимание, как писать сайты на Django 4 и как расширять. Нам будет доступно понимание комуникаций на сайте. После курса мы сможете воплотить свои идеи в жизнь.</p>
+                    <hr>
+                    <h3>Все уроки на&nbsp;<a href="https://spb-tut.ru/">spb-tut.ru</a>&nbsp;по Django 4.</h3>
+                    <hr>
+                    {% if user.is_authenticated  %}
+                    <button class="btn btn-primary" type="button" style="height: 35px;background: rgb(62,164,238);"><i class="fa fa-star"></i>
+                        <a href="#">&nbsp;Лента</a>&nbsp;
+                        </button>
+                    <button class="btn btn-primary" type="button" style="padding: 3px 12px;margin: 12px;background: rgb(62,164,238);"><i class="fa fa-user"></i>
+                        <a href="#">{{user}}, вы уже вошли</a>
+                     </button>
+                    {% else %}
+                    Регистрация: когла напишем user_views.register, name='register' - это urlconf
+               вставить url 'register'
+
+               Логин: вставить Логин url 'account_login' в settings.py настройка LOGIN_URL = 'account_login' настройка добавлена на этапе создания страницы
+                    <button class="btn btn-primary" type="button" style="height: 35px;background: rgb(62,164,238);"><i class="fa fa-star"></i>
+                        <a href="{% url 'account_login' %}">&nbsp;Войти</a>&nbsp;
+                        </button>
+                    <button class="btn btn-primary" type="button" style="padding: 3px 12px;margin: 12px;background: rgb(62,164,238);"><i class="fa fa-user"></i>
+                        <a href="#">Зарегистрироваться</a>
+                     </button>
+                    {% endif %}
+                    <hr>
+                    <header></header>
+                </div>
+                <div class="col">
+                    <figure class="figure"><img class="img-fluid figure-img" src="{% static "bootstrap5\assets\img\busel.png" %}">
+
+                        <figcaption class="figure-caption">Белый Аист</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

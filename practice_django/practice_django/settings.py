@@ -248,9 +248,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #CRISPY_TEMPLATE_PACK = 'uni-form' #Форма бутстрап
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 #CRISPY_TEMPLATE_PACK = 'uni_form'
-
-
 # End django-crispy-forms
+
+LOGIN_URL = 'account_login'
+LOGIN_REDIRECT_URL = 'index-home'
 
 #django-ckeditor
 

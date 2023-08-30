@@ -11,6 +11,7 @@ from django.dispatch import receiver #импорт декоратора (уро�
 
 
 
+
 class Post(models.Model):
 
     class Meta:
@@ -66,4 +67,20 @@ def prepopulated_slug(sender,instance,**kwargs):
 
 
 
-# Create your models here.
+'''Модель коментариев'''
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments_blog')
+    name_author = models.ForeignKey(User, on_delete = models.CASCADE) #django само создает related_name ,еслт его не указывать
+    body = models.TextField(max_length = 255)
+    date_created = models.DateTimeField(auto_now_add = True)
+    likes_comment = models.ManyToManyField(User,related_name = 'likes_blog_comment', blank = True)
+    replay_comment = models.ForeignKey('self' , null = True, related_name='replay_blog_comment', on_delete = models.CASCADE)
+
+    def __str__(self):
+        return "%s - %s - %s" %(self.post.title, self.name_author, self.id)
+    def total_likes_comment(self):
+        return self.likes_comment.count()
+
+    def get_absolute_url(self):
+        return reverse ('post_detail',kwargs = {'pk':self.pk})

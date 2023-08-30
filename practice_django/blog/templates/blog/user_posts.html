@@ -19,8 +19,8 @@
 
         <div class="intro">
             <h1 class="text-center" data-bss-hover-animate="pulse">&nbsp;
-
-                {{post.title}}
+                <a href="{% url 'post_detail' post.id post.slug %}">
+                    {{post.title}}</a>
 
 
             </h1>
