@@ -12,18 +12,18 @@
         <div class="intro">
             <h1 class="text-center" data-bss-hover-animate="pulse">&nbsp;
 
-                {{blog_post_detail.title}}
+                {{post_cn.title}}
 
             </h1>
             <p class="text-center">
                 <span class="by">by</span>
-                {% if blog_post_detail.author == user %}
-                <a href ="{% url 'post_delete' blog_post_detail.id   %}">delete |</a>
-                <a href ="{% url 'post_update' blog_post_detail.id   %}">update |</a>
+                {% if post_cn.author == user %}
+                <a href ="{% url 'post_delete' post_cn.id   %}">delete |</a>
+                <a href ="{% url 'post_update' post_cn.id   %}">update |</a>
                 {% endif %}
-                <a href="#">{{post.author}}</a>&nbsp;&nbsp;
-                <span class="date">{{post.date_create|date:"o M d"}} </span><br>
-            {{blog_post_detail.content|safe}}
+                <a href="#">{{post_cn.author}}</a>&nbsp;&nbsp;
+                <span class="date">{{post_cn.date_create|date:"o M d"}} </span><br>
+            {{post_cn.content|safe}}
             </p>
         </div>
 

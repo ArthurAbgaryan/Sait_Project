@@ -27,7 +27,8 @@
             <p class="text-center">
 
                 <span class="by">by</span> <a href="#">{{post.author}}</a>&nbsp;&nbsp;<span class="date">{{post.date_create|date:"o M d"}} </span><br>
-            {{post.content|safe}}
+            {{post.content|safe|linebreaks|truncatewords_html:7}}
+                <a href="{% url 'post_detail' post.id post.slug %}">[читать дальше]</a>
             </p>
         </div>
         {% endfor %}
@@ -49,6 +50,28 @@
             <figure class="figure d-block"></figure>
         </div>
     </div>
+
+{% if is_paginated %}
+
+        {% if page_obj.has_previous %}
+          <a class="btn btn-outline-info mb-4" href="?page=1">Первая</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}">Предыдущая</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a class="btn btn-outline-info mb-4" href="?page={{num}}">{{num}}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <a class="btn btn-outline-info mb-4" href="?page={{page_obj.next_page_number}}">Следующая</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{page_obj.paginator.num_pages}}">Последняя</a>
+        {% endif %}
+
+      {% endif %}
 </div>
 
 {% endblock %}
