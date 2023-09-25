@@ -1,9 +1,13 @@
 from django.shortcuts import render,get_object_or_404
 from django.views.generic import ListView, CreateView,DetailView,DeleteView,UpdateView
-from .models import Post
+from .models import Post, Comment
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
+import random
+from .forms import CommentForm
+from django.template.loader import render_to_string
+from django.http import HttpResponseRedirect, JsonResponse
 
 
 
@@ -16,8 +20,26 @@ def index(request):
 
 
 '''!!!Написать вывод всех постов'''
-class PostListView(ListView):
-    pass
+class HomePostListViewAllUsers(ListView):
+    model = Post
+    template_name = 'blog/home.html'
+    context_object_name = 'all_posts'
+    ordering = ['-date_create'] #сортировка в обратном порядке
+    paginate_by = 3
+    def get_context_data(self, *args, **kwargs): #будет добавлять рондомный список с именем "random"
+        context = super(HomePostListViewAllUsers,self).get_context_data() #применение метода к род-ому классу PostListView, т.е получаем список из класса PostListView
+        users = list(User.objects.exclude(pk = self.request.user.pk)) #получаем пол-ей без pk
+        if len(users) > 3: #если пол-ей меньше 3
+            out = 3
+        else:
+            out = len(users) #кол-во пол-ей
+        random_user = random.sample(users, out) #рандомное размешение юзеров
+        context['random'] = random_user
+        return context
+
+
+
+
 
 class UserListView(ListView):
 
@@ -56,7 +78,7 @@ class PostDetailView(DetailView):
     context_object_name = 'blog_post_detail'
 '''
 
-def PostDetailView(request, pk, slug):#обязательный параметр request(как в фу-ях)
+def post_detail_view(request, pk, slug):#обязательный параметр request(как в фу-ях)
     #как обрабатывать
     handle_page = get_object_or_404(Post, id=pk, slug= slug)#получ. объект из Post, по id и slug
     total_comment = handle_page.comments_blog.all().filter(replay_comment=None).order_by('-id') #выводим коментрии,без поля replay_comment
@@ -66,9 +88,29 @@ def PostDetailView(request, pk, slug):#обязательный параметр
 
     #что извлечь
     context = {}
-    context['post_cn'] = handle_page
-    return render (request, 'blog/post_detail.html', context)
 
+    if request.method == 'POST':
+        comments_qs = None
+        comments_form = CommentForm(request.POST or None)
+        if comments_form.is_valid():
+            form = request.POST.get('body') #получаем данные с поля 'body'
+            comment = Comment.objects.create( #создаем обьект класса Comment
+                              post = handle_page, #полю присваивается выше полученный обьект
+                              name_author = request.user, #полю автора запрашиваем пользователя
+                              body = form, #этому полю присваивается выше полученный form
+                              replay_comment = comments_qs ) #так как коммент созд без ответа на него, то присв. None
+            comment.save()#сохраняем
+    else:
+        comments_form = CommentForm()
+    context['comments_form'] = comments_form
+    context['comments'] = total_comment
+    context['post_cn'] = handle_page
+
+    if request.is_ajax():
+        html = render_to_string('blog/comments.html',context) #подгружаем шаблон коментариев
+        return JsonResponse({'form':html})# пер-ся ключ form , котор. ранее получили, и значение html
+
+    return render (request, 'blog/post_detail.html', context)
 
 
 

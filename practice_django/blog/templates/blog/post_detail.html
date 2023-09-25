@@ -6,36 +6,74 @@
 
 {% block content_blog %}
 
-<div class="row">
-    <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
-
-        <div class="intro">
-            <h1 class="text-center" data-bss-hover-animate="pulse">&nbsp;
-
-                {{post_cn.title}}
-
-            </h1>
-            <p class="text-center">
-                <span class="by">by</span>
-                {% if post_cn.author == user %}
-                <a href ="{% url 'post_delete' post_cn.id   %}">delete |</a>
-                <a href ="{% url 'post_update' post_cn.id   %}">update |</a>
-                {% endif %}
-                <a href="#">{{post_cn.author}}</a>&nbsp;&nbsp;
-                <span class="date">{{post_cn.date_create|date:"o M d"}} </span><br>
-            {{post_cn.content|safe}}
-            </p>
+<div class="container py-4 py-xl-5" style="background: #fbf8f4;">
+    <div class="row mb-5">
+        <div class="col-xl-12"><img class="rounded-circle flex-shrink-0 me-3 fit-cover" width="50" height="50" src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png">
+            <p class="fw-bold mb-0">John Smith</p>
+            <p class="text-muted mb-0">Erat netus</p>
         </div>
+    </div>
+    <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3" style="background: #fbf8f4;border-top-style: dashed;border-top-color: rgb(143,37,37);">
+        <div class="col-xl-8 offset-xl-1 col-md-12 col-lg-12" style="background: var(--bs-white);">
+            <div>
+                <p class="text-end"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-bookmarks fs-3">
+                        <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5V4zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1H4z"></path>
+                        <path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1z"></path>
+                    </svg></p>
+            </div>
+            <div class="p-4">
+                <h3 style="text-align: center;">
+                    {# поле загаловка#}
+                   {{post_cn.title}}
 
-        <p class="text-center" data-bss-hover-animate="pulse"></p>
+                </h3>
+                <p class="border rounded border-2">
+                    <a href="{% url 'post_update' post_cn.pk %}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-pencil">
+                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"></path>
+                    </svg></a>
+                    <a href="{% url 'post_delete' post_cn.pk %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-trash" style="font-size: 16px;margin: 5px;">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                    </svg></a>
+                </p>
+                <p class="border rounded border-2">
+                      {# контент #}
+                      {{post_cn.content|safe}}
 
-        <div class="text">
-            <p>
+                </p>
+                <div class="border rounded border-2 p-4">
+                    <div class="d-flex"><img class="rounded-circle flex-shrink-0 me-3 fit-cover" width="50" height="50" src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png">
+                        <div>
+                            <p class="fw-bold mb-0">&nbsp;like</p>
+                            <p class="text-muted mb-0">lice</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8 offset-xl-1" style="background: var(--bs-white);">
+            <div class="p-4">
+                <p class="border rounded border-2">
 
-            </p>
-            <figure class="figure d-block"></figure>
+                    comment
+                    <div class="main-comment-section">
+                         {% include 'blog/comments.html' %}
+                    </div>
+
+                </p>
+                <div class="border rounded border-2 p-4">
+                    <div class="d-flex"><img class="rounded-circle flex-shrink-0 me-3 fit-cover" width="50" height="50" src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png">
+                        <div>
+                            <p class="fw-bold mb-0">&nbsp;like</p>
+                            <p class="text-muted mb-0">lice</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 
 {% endblock %}

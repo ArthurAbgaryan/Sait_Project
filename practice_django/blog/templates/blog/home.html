@@ -1,0 +1,91 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+{% if post %}
+{{post.title}}
+{% else %}
+Все посты пользователя {{post.auth}}
+{% endif %}
+{% endblock %}
+
+{% block content_blog %}
+
+<div class="row">
+    <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+
+        {% if all_posts %}
+
+        {% for post in all_posts %}
+
+        <div class="intro">
+            <h1 class="text-center" data-bss-hover-animate="pulse">&nbsp;
+                <a href="{% url 'post_detail' post.id post.slug %}">
+                    {{post.title}}</a>
+
+
+            </h1>
+            <p class="text-center">
+
+                <span class="by">by</span> <a href="#">{{post.author}}</a>&nbsp;&nbsp;<span class="date">{{post.date_create|date:"o M d"}} </span><br>
+            {{post.content|safe|linebreaks|truncatewords_html:7}}
+                <a href="{% url 'post_detail' post.id post.slug %}">[читать дальше]</a>
+            </p>
+        </div>
+        {% endfor %}
+
+
+        {% else %}
+        <p class="text-center" data-bss-hover-animate="pulse"> У этого пользователя нет постов</p>
+
+        {% endif %}
+
+
+
+        <div class="text">
+            <p>
+
+
+
+            </p>
+            <figure class="figure d-block"></figure>
+        </div>
+    </div>
+
+
+    <ul>
+        {% if all_posts.0 %}
+        <a href="{% url 'post_detail' all_posts.0.pk all_posts.0.slug %}"><li>{{ all_posts.0.title }}</li></a>
+        {% endif %}
+        {% if all_posts.1 %}
+        <a href="{% url 'post_detail' all_posts.1.pk all_posts.1.slug %}"><li>{{ all_posts.1.title }}</li></a>
+        {% endif %}
+        {% if all_posts.2 %}
+        <a href="{% url 'post_detail' all_posts.2.pk all_posts.2.slug %}"><li>{{ all_posts.2.title }}</li></a>
+        {% endif %}
+
+    </ul>
+
+{% if is_paginated %}
+
+        {% if page_obj.has_previous %}
+          <a class="btn btn-outline-info mb-4" href="?page=1">Первая</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}">Предыдущая</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a class="btn btn-outline-info mb-4" href="?page={{num}}">{{num}}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <a class="btn btn-outline-info mb-4" href="?page={{page_obj.next_page_number}}">Следующая</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{page_obj.paginator.num_pages}}">Последняя</a>
+        {% endif %}
+
+      {% endif %}
+</div>
+
+{% endblock %}

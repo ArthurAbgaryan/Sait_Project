@@ -114,6 +114,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'middleware.middlewares.AjaxMiddleware',
 
     #django-debug-toolbar
     #https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
