@@ -3,6 +3,7 @@ from django.views.generic import ListView, CreateView,DetailView,DeleteView,Upda
 from .models import Post, Comment
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 import random
 from .forms import CommentForm
@@ -70,6 +71,30 @@ class PostCreateView ( LoginRequiredMixin, CreateView):
         form.instance.author=self.request.user
         return super().form_valid(form)
 
+@login_required
+def save_post_is_ajax(request):
+    post = get_object_or_404(Post, id = request.POST.get('id')) #получение поста по id
+    saved = False #перем-я что-бы  исп-ть в дальнейшем , для не сохранения постов по умол-ию
+    if post.saves_posts.filter(id = request.user.id).exists(): #exists возврашает True или False
+        post.saves_posts.remove(request.user) #возможность удаление поста с запроса пользователя
+        saved = False
+    else:
+        post.saves_posts.add(request.user)#возможность удаление поста с запроса пользователя
+        saved = True
+
+    context = {
+        'post':post,
+        'total_post':total_saves_posts(),
+        'saved': saved,
+
+    }
+    if request.is_ajax():
+        html = render_to_string(
+            'blog/save_section.html',
+            context,
+            request = request)
+        return JsonResponse({'form':html}) #фу-ия которая сама умеет работать с ajax
+
 
 '''
 class PostDetailView(DetailView):
@@ -91,8 +116,8 @@ def post_detail_view(request, pk, slug):#обязательный парамет
 
     if request.method == 'POST':
         comments_qs = None
-        comments_form = CommentForm(request.POST or None)
-        if comments_form.is_valid():
+        comment_form = CommentForm(request.POST or None)
+        if comment_form.is_valid():
             form = request.POST.get('body') #получаем данные с поля 'body'
             comment = Comment.objects.create( #создаем обьект класса Comment
                               post = handle_page, #полю присваивается выше полученный обьект
@@ -100,15 +125,17 @@ def post_detail_view(request, pk, slug):#обязательный парамет
                               body = form, #этому полю присваивается выше полученный form
                               replay_comment = comments_qs ) #так как коммент созд без ответа на него, то присв. None
             comment.save()#сохраняем
+            total_comment = handle_page.comments_blog.all().filter(replay_comment=None).order_by('-id')
+
     else:
-        comments_form = CommentForm()
-    context['comments_form'] = comments_form
+        comment_form = CommentForm()
+    context['comment_form'] = comment_form
     context['comments'] = total_comment
     context['post_cn'] = handle_page
 
     if request.is_ajax():
-        html = render_to_string('blog/comments.html',context) #подгружаем шаблон коментариев
-        return JsonResponse({'form':html})# пер-ся ключ form , котор. ранее получили, и значение html
+        html = render_to_string('blog/comments.html',context, request = request) #подгружаем шаблон коментариев
+        return JsonResponse({'form':html}) # пер-ся ключ form , котор. ранее получили, и значение html
 
     return render (request, 'blog/post_detail.html', context)
 
@@ -141,6 +168,20 @@ class PostUpdateView (LoginRequiredMixin, UserPassesTestMixin , UpdateView):
         if self.request.user == post.author:
             return True
         return False
+
+
+'''Save post'''
+
+@login_required #дек-р проверяет вошел ли пользователь в систему, иначе перенапр. к странице регистриции/входа
+def all_save_view_posts(request):
+    user = request.user
+    saved_posts = user.blog_posts_save.all()
+    context = {'saved_posts':saved_posts}
+    return render(request, 'blog/saved_posts.html', context)
+
+
+
+
 
 
 
