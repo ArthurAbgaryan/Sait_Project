@@ -71,30 +71,43 @@ class PostCreateView ( LoginRequiredMixin, CreateView):
         form.instance.author=self.request.user
         return super().form_valid(form)
 
+
+'''Post like'''
+
+@login_required
+def like_post(request):
+    post = get_object_or_404(Post, id = request.POST.get('id'))#получаем пост
+    liked = False
+    if post.likes_post.filter(id = request.user.id).exists():
+        post.likes_post.remove(request.user)
+        liked = False
+    else:
+        post.likes_post.add(request.user)
+        liked = True
+
+
+'''Post save'''
 @login_required
 def save_post_is_ajax(request):
-    post = get_object_or_404(Post, id = request.POST.get('id')) #получение поста по id
-    saved = False #перем-я что-бы  исп-ть в дальнейшем , для не сохранения постов по умол-ию
-    if post.saves_posts.filter(id = request.user.id).exists(): #exists возврашает True или False
-        post.saves_posts.remove(request.user) #возможность удаление поста с запроса пользователя
+    post = get_object_or_404(Post, id=request.POST.get("id"))
+    saved = False
+    if post.saves_posts.filter(id=request.user.id).exists():
+        post.saves_posts.remove(request.user)
         saved = False
     else:
-        post.saves_posts.add(request.user)#возможность удаление поста с запроса пользователя
+        post.saves_posts.add(request.user)
         saved = True
-
     context = {
-        'post':post,
-        'total_post':total_saves_posts(),
-        'saved': saved,
-
+        'post_cn': post,
+        'total_saves': post.total_saves_posts(),
+        'saved': saved
     }
-    if request.is_ajax():
-        html = render_to_string(
-            'blog/save_section.html',
-            context,
-            request = request)
-        return JsonResponse({'form':html}) #фу-ия которая сама умеет работать с ajax
 
+    if request.is_ajax():
+        html = render_to_string('blog/save_section.html',
+                                context,
+                                request=request)
+        return JsonResponse({'form': html})
 
 '''
 class PostDetailView(DetailView):
@@ -109,7 +122,7 @@ def post_detail_view(request, pk, slug):#обязательный парамет
     total_comment = handle_page.comments_blog.all().filter(replay_comment=None).order_by('-id') #выводим коментрии,без поля replay_comment
     total_comment2 = handle_page.comments_blog.all().order_by('-id')
     total_likes = handle_page.total_likes() #вызвваем мет. подсчета лайков к нашему посту, из модели
-    total_save = handle_page.total_saves_posts()#вызвваем мет. подсчета сохраненных постов, из модели
+    total_saves = handle_page.total_saves_posts()#вызвваем мет. подсчета сохраненных постов, из модели
 
     #что извлечь
     context = {}
@@ -129,6 +142,14 @@ def post_detail_view(request, pk, slug):#обязательный парамет
 
     else:
         comment_form = CommentForm()
+
+    saved = False
+    if handle_page.saves_posts.filter(id = request.user.id).exists():
+        saved = True
+
+
+    context['total_saves'] = total_saves
+    context['saved'] = saved
     context['comment_form'] = comment_form
     context['comments'] = total_comment
     context['post_cn'] = handle_page
@@ -176,8 +197,8 @@ class PostUpdateView (LoginRequiredMixin, UserPassesTestMixin , UpdateView):
 def all_save_view_posts(request):
     user = request.user
     saved_posts = user.blog_posts_save.all()
-    context = {'saved_posts':saved_posts}
-    return render(request, 'blog/saved_posts.html', context)
+    context = {'saved_posts': saved_posts}
+    return render(request,'blog/saved_posts.html',context)
 
 
 
