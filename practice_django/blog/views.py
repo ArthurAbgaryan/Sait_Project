@@ -84,7 +84,14 @@ def like_post(request):
     else:
         post.likes_post.add(request.user)
         liked = True
-
+    context = {
+        'post_cn':post,
+        'liked':liked,
+        'total_likes':post.total_likes()
+    }
+    if request.is_ajax():
+        html = render_to_string('blog/like_section.html', context,request = request)
+    return JsonResponse({'form':html})
 
 '''Post save'''
 @login_required
@@ -147,7 +154,12 @@ def post_detail_view(request, pk, slug):#обязательный парамет
     if handle_page.saves_posts.filter(id = request.user.id).exists():
         saved = True
 
+    liked = False
+    if handle_page.likes_post.filter(id = request.user.id).exists():
+        liked = True
 
+    context['total_likes'] = total_likes #переменная которую мы получили в этой же фу-ии выше
+    context['liked'] = liked
     context['total_saves'] = total_saves
     context['saved'] = saved
     context['comment_form'] = comment_form
